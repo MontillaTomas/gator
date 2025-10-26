@@ -1,10 +1,13 @@
 package cli
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 
 	"github.com/MontillaTomas/blog-aggregator/internal/config"
+	"github.com/MontillaTomas/blog-aggregator/internal/database"
+	_ "github.com/lib/pq"
 )
 
 func Run() {
@@ -15,10 +18,20 @@ func Run() {
 		return
 	}
 
-	s := &state{cfg: cfg}
+	db, err := sql.Open("postgres", cfg.DbURL)
+	if err != nil {
+		fmt.Printf("Error connecting to database: %v\n", err)
+		os.Exit(1)
+		return
+	}
+	defer db.Close()
+	dbQueries := database.New(db)
+
+	s := &state{cfg: cfg, db: dbQueries}
 	cmds := &commands{handlers: make(map[string]func(*state, command) error)}
 
 	cmds.register("login", handlerLogin)
+	cmds.register("register", registerHandler)
 
 	if len(os.Args) < 2 {
 		fmt.Println("No command provided")
