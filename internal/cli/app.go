@@ -33,6 +33,7 @@ func Run() {
 	cmds.register("login", handlerLogin)
 	cmds.register("register", registerHandler)
 	cmds.register("reset", resetHandler)
+	cmds.register("users", usersHandler)
 
 	cmd := command{
 		name: os.Args[1],

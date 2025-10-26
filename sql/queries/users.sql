@@ -15,3 +15,7 @@ WHERE name = $1;
 
 -- name: DeleteAllUsers :exec
 TRUNCATE TABLE users;
+
+-- name: GetUsers :many
+SELECT id, name
+FROM users;
