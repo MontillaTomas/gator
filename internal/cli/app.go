@@ -32,12 +32,7 @@ func Run() {
 
 	cmds.register("login", handlerLogin)
 	cmds.register("register", registerHandler)
-
-	if len(os.Args) < 2 {
-		fmt.Println("No command provided")
-		os.Exit(1)
-		return
-	}
+	cmds.register("reset", resetHandler)
 
 	cmd := command{
 		name: os.Args[1],
