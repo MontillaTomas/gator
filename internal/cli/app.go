@@ -35,6 +35,7 @@ func Run() {
 	cmds.register("reset", resetHandler)
 	cmds.register("users", usersHandler)
 	cmds.register("agg", handlerAgg)
+	cmds.register("addfeed", addfeedHandler)
 
 	cmd := command{
 		name: os.Args[1],

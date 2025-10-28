@@ -10,6 +10,10 @@ func resetHandler(s *state, cmd command) error {
 	if err != nil {
 		return err
 	}
+	err = s.cfg.SetUser("")
+	if err != nil {
+		return fmt.Errorf("failed to reset user: %w", err)
+	}
 	fmt.Printf("Users table has been reset\n")
 	return nil
 }
