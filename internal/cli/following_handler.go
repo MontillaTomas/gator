@@ -3,19 +3,11 @@ package cli
 import (
 	"context"
 	"fmt"
+
+	"github.com/MontillaTomas/blog-aggregator/internal/database"
 )
 
-func handlerFollowing(s *state, cmd command) error {
-	currentUserName := s.cfg.CurrentUserName
-	if currentUserName == "" {
-		return fmt.Errorf("no user is currently logged in")
-	}
-
-	user, err := s.db.GetUserByName(context.Background(), currentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %w", err)
-	}
-
+func handlerFollowing(s *state, cmd command, user database.User) error {
 	feeds, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("failed to get followed feeds: %w", err)

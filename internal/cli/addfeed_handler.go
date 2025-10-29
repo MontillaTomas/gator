@@ -9,18 +9,9 @@ import (
 	"github.com/google/uuid"
 )
 
-func addfeedHandler(s *state, cmd command) error {
+func addfeedHandler(s *state, cmd command, user database.User) error {
 	if len(cmd.args) < 2 {
 		return fmt.Errorf("name and url arguments are required")
-	}
-
-	currentUserName := s.cfg.CurrentUserName
-	if currentUserName == "" {
-		return fmt.Errorf("no user is currently logged in")
-	}
-	currentUserId, err := s.db.GetUserByName(context.Background(), currentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %w", err)
 	}
 
 	feedName := cmd.args[0]
@@ -30,7 +21,7 @@ func addfeedHandler(s *state, cmd command) error {
 		ID:        uuid.New(),
 		Name:      feedName,
 		Url:       feedURL,
-		UserID:    currentUserId.ID,
+		UserID:    user.ID,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -41,7 +32,7 @@ func addfeedHandler(s *state, cmd command) error {
 
 	paramsFollow := database.CreateFeedFollowParams{
 		ID:        uuid.New(),
-		UserID:    currentUserId.ID,
+		UserID:    user.ID,
 		FeedID:    feed.ID,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),

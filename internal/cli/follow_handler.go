@@ -9,20 +9,11 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.args) < 1 {
 		return fmt.Errorf("feed URL is required")
 	}
 	feedURL := cmd.args[0]
-
-	currentUserName := s.cfg.CurrentUserName
-	if currentUserName == "" {
-		return fmt.Errorf("no user is currently logged in")
-	}
-	user, err := s.db.GetUserByName(context.Background(), currentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %w", err)
-	}
 
 	feed, err := s.db.GetFeedByURL(context.Background(), feedURL)
 	if err != nil {
@@ -41,7 +32,7 @@ func handlerFollow(s *state, cmd command) error {
 		return fmt.Errorf("failed to follow feed: %w", err)
 	}
 
-	fmt.Printf("%s is now following feed %s\n", currentUserName, feed.Name)
+	fmt.Printf("%s is now following feed %s\n", user.Name, feed.Name)
 
 	return nil
 }
