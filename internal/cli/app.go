@@ -39,6 +39,7 @@ func Run() {
 	cmds.register("feeds", feedsHandler)
 	cmds.register("follow", middlewareLoggedIn(handlerFollow))
 	cmds.register("following", middlewareLoggedIn(handlerFollowing))
+	cmds.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 
 	cmd := command{
 		name: os.Args[1],
