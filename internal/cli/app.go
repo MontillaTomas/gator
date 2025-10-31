@@ -25,6 +25,11 @@ func Run() {
 		return
 	}
 	defer db.Close()
+
+	if err := database.Migrate(db); err != nil {
+		fmt.Printf("error running migrations: %v\n", err)
+	}
+
 	dbQueries := database.New(db)
 
 	s := &state{cfg: cfg, db: dbQueries}

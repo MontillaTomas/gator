@@ -8,7 +8,7 @@ An RSS feed aggregator CLI tool built in Go. Gator (aggreGATOR) allows you to co
 - Store collected posts in PostgreSQL
 - Follow and unfollow feeds added by any user
 - Browse recent posts with links to full content
-- Multi-user support with authentication
+- Multi-user support
 
 ## Prerequisites
 
@@ -52,6 +52,8 @@ Example:
   "current_user_name": ""
 }
 ```
+
+> **Note**: Ensure that the database specified in `db_url` already exists and has no tables. Gator will handle the creation of necessary tables.
 
 ## Usage
 
@@ -105,9 +107,18 @@ Example:
 
 8. **Aggregate posts**
    ```bash
-   gator agg
+   gator agg <time_between_requests>
    ```
-   Fetches and stores all available posts from feeds in the database.
+   Continuously fetches and stores posts from all feeds in the database at the specified interval. The time between requests should be a valid Go duration string (e.g., `1m`, `30s`, `1h`).
+   
+   The aggregator runs indefinitely, fetching the next feed to update on each cycle. To stop the aggregation process, press `Ctrl+C`.
+   
+   Example:
+   ```bash
+   gator agg 1m      # Fetch feeds every 1 minute
+   gator agg 30s     # Fetch feeds every 30 seconds
+   gator agg 5m      # Fetch feeds every 5 minutes
+   ```
 
 9. **Browse recent posts**
    ```bash
@@ -144,8 +155,8 @@ gator register alice
 gator addfeed "Go Blog" https://go.dev/blog/feed.atom
 gator addfeed "Tech News" https://example.com/rss
 
-# Aggregate posts
-gator agg
+# Aggregate posts (runs continuously, press Ctrl+C to stop)
+gator agg 1m
 
 # Browse latest posts
 gator browse 5
